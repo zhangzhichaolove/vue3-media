@@ -1,6 +1,10 @@
 // Vue3 Media Component Library
 import type { App, Plugin } from 'vue'
 
+// Styles
+import './styles/variables.css'
+import './styles/base.css'
+
 // Components
 import { VideoPlayer } from './components/VideoPlayer'
 import { AudioPlayer } from './components/AudioPlayer'

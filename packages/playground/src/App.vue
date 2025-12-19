@@ -102,9 +102,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VideoPlayer } from './components/VideoPlayer'
-import { AudioPlayer } from './components/AudioPlayer'
-import type { TimeUpdatePayload } from './types'
+import { VideoPlayer, AudioPlayer } from 'vue3-media'
+import type { TimeUpdatePayload } from 'vue3-media'
 
 // Demo state
 const darkMode = ref(false)
