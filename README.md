@@ -27,6 +27,9 @@ yarn add vue3-media
 
 # pnpm
 pnpm add vue3-media
+
+pnpm --filter vue3-media build
+pnpm --filter playground dev
 ```
 
 ## 🚀 Quick Start
