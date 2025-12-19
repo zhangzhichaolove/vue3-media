@@ -24,7 +24,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "prepublishOnly": "pnpm build",
+    "login": "pnpm login --registry https://registry.npmjs.org",
+    "login:legacy": "pnpm login --auth-type=legacy --registry https://registry.npmjs.org",
+    "release": "pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org",
+    "release:patch": "pnpm version patch && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org",
+    "release:minor": "pnpm version minor && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org",
+    "release:major": "pnpm version major && pnpm publish --access public --no-git-checks --registry https://registry.npmjs.org"
   },
   "keywords": [
     "vue3",
