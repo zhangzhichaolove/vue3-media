@@ -102,8 +102,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { VideoPlayer, AudioPlayer } from 'vue3-media'
-import type { TimeUpdatePayload } from 'vue3-media'
+import { VideoPlayer, AudioPlayer } from '@peakchao/vue3-media'
+import type { TimeUpdatePayload } from '@peakchao/vue3-media'
+// import '@peakchao/vue3-media/dist/vue3-media.css'
+import '@peakchao/vue3-media/style'
 
 // Demo state
 const darkMode = ref(false)

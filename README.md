@@ -39,7 +39,7 @@ pnpm --filter playground dev
 ```ts
 import { createApp } from 'vue'
 import Vue3Media from 'vue3-media'
-import 'vue3-media/dist/style.css'
+import 'vue3-media/dist/vue3-media.css'
 
 const app = createApp(App)
 app.use(Vue3Media)  // 注册所有组件
@@ -51,7 +51,7 @@ app.mount('#app')
 ```ts
 import { createApp } from 'vue'
 import { VideoPlayer, AudioPlayer } from 'vue3-media'
-import 'vue3-media/dist/style.css'
+import 'vue3-media/dist/vue3-media.css'
 
 const app = createApp(App)
 app.use(VideoPlayer)  // 只注册 VideoPlayer
@@ -64,7 +64,7 @@ app.mount('#app')
 ```vue
 <script setup lang="ts">
 import { VideoPlayer, AudioPlayer } from 'vue3-media'
-import 'vue3-media/dist/style.css'
+import 'vue3-media/dist/vue3-media'
 </script>
 
 <template>

@@ -14,12 +14,12 @@ importers:
 
   packages/playground:
     dependencies:
+      '@peakchao/vue3-media':
+        specifier: workspace:*
+        version: link:../vue3-media
       vue:
         specifier: ^3.5.13
         version: 3.5.26(typescript@5.6.3)
-      vue3-media:
-        specifier: workspace:*
-        version: link:../vue3-media
     devDependencies:
       '@types/node':
         specifier: ^25.0.3
