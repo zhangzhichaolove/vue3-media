@@ -272,4 +272,4 @@ import type {
 
 ## 📄 License
 
-MIT © [peakchao](https://github.com/peakchao)
+MIT © [peakchao](https://github.com/zhangzhichaolove)
