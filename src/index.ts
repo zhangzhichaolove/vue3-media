@@ -8,10 +8,28 @@ import { AudioPlayer } from './components/AudioPlayer'
 // Types
 export * from './types'
 
-// Export components
+// Add install method to each component for individual global registration
+// Usage: app.use(VideoPlayer) or app.component('VideoPlayer', VideoPlayer)
+const VideoPlayerPlugin: Plugin = {
+  install(app: App) {
+    app.component('VideoPlayer', VideoPlayer)
+  },
+}
+
+const AudioPlayerPlugin: Plugin = {
+  install(app: App) {
+    app.component('AudioPlayer', AudioPlayer)
+  },
+}
+
+// Attach install to components
+;(VideoPlayer as any).install = VideoPlayerPlugin.install
+;(AudioPlayer as any).install = AudioPlayerPlugin.install
+
+// Export components (for on-demand import)
 export { VideoPlayer, AudioPlayer }
 
-// Plugin installation
+// Plugin installation (for global registration)
 const Vue3Media: Plugin = {
   install(app: App) {
     app.component('VideoPlayer', VideoPlayer)

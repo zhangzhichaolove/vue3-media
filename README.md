@@ -31,7 +31,7 @@ pnpm add vue3-media
 
 ## 🚀 Quick Start
 
-### Global Registration
+### 方式一：全局注册所有组件
 
 ```ts
 import { createApp } from 'vue'
@@ -39,11 +39,24 @@ import Vue3Media from 'vue3-media'
 import 'vue3-media/dist/style.css'
 
 const app = createApp(App)
-app.use(Vue3Media)
+app.use(Vue3Media)  // 注册所有组件
 app.mount('#app')
 ```
 
-### Per-Component Import
+### 方式二：按需全局注册
+
+```ts
+import { createApp } from 'vue'
+import { VideoPlayer, AudioPlayer } from 'vue3-media'
+import 'vue3-media/dist/style.css'
+
+const app = createApp(App)
+app.use(VideoPlayer)  // 只注册 VideoPlayer
+app.use(AudioPlayer)  // 只注册 AudioPlayer
+app.mount('#app')
+```
+
+### 方式三：组件内按需引入
 
 ```vue
 <script setup lang="ts">
@@ -210,4 +223,4 @@ playerRef.value?.toggleFullscreen() // VideoPlayer only
 
 ## 📄 License
 
-MIT License © 2024
+MIT License © 2025
