@@ -1,0 +1,177 @@
+/* Vue3 Media - Base Styles */
+
+@import './variables.css';
+
+/* Reset & Base */
+.vm-player * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.vm-player {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Common Button Styles */
+.vm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--vm-border-radius-sm);
+  color: var(--vm-control-text);
+  transition: all var(--vm-transition-fast);
+}
+
+.vm-btn:hover {
+  background: var(--vm-control-hover);
+}
+
+.vm-btn:focus {
+  outline: none;
+}
+
+.vm-btn:focus-visible {
+  outline: 2px solid var(--vm-primary);
+  outline-offset: 2px;
+}
+
+.vm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Icon Styles */
+.vm-icon {
+  width: var(--vm-icon-size);
+  height: var(--vm-icon-size);
+  display: inline-block;
+  fill: currentColor;
+}
+
+.vm-icon-lg {
+  width: var(--vm-icon-size-lg);
+  height: var(--vm-icon-size-lg);
+}
+
+/* Range Input (Slider) Styles */
+.vm-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--vm-progress-bg);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: height var(--vm-transition-fast);
+}
+
+.vm-slider:hover {
+  height: 6px;
+}
+
+.vm-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--vm-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform var(--vm-transition-fast);
+}
+
+.vm-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.vm-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--vm-primary);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform var(--vm-transition-fast);
+}
+
+.vm-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Tooltip */
+.vm-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--vm-transition-fast);
+  margin-bottom: 8px;
+}
+
+.vm-tooltip-visible {
+  opacity: 1;
+}
+
+/* Time Display */
+.vm-time {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--vm-control-text);
+  white-space: nowrap;
+}
+
+/* Loading Spinner */
+.vm-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+}
+
+.vm-loading-spinner {
+  width: 100%;
+  height: 100%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--vm-primary);
+  border-radius: 50%;
+  animation: vm-spin 0.8s linear infinite;
+}
+
+@keyframes vm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Fade Animation */
+.vm-fade-enter-active,
+.vm-fade-leave-active {
+  transition: opacity var(--vm-transition);
+}
+
+.vm-fade-enter-from,
+.vm-fade-leave-to {
+  opacity: 0;
+}
