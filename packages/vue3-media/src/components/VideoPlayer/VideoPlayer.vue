@@ -2,7 +2,12 @@
   <div
     ref="containerRef"
     class="vm-player vm-video-player"
-    :class="{ 'vm-dark': darkMode, 'vm-fullscreen': isFullscreen }"
+    :class="{ 
+      'vm-dark': darkMode, 
+      'vm-fullscreen': isFullscreen,
+      'vm-mini-player': isMiniPlayer,
+      [`vm-mini-${miniPlayerPosition}`]: isMiniPlayer
+    }"
     :style="containerStyle"
     tabindex="0"
     @mousemove="handleMouseMove"
@@ -19,8 +24,12 @@
       :loop="loop"
       :muted="muted"
       :preload="preload"
+      playsinline
       @click="togglePlay"
       @dblclick="toggleFullscreen"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
     />
 
     <!-- Loading Spinner -->
@@ -43,6 +52,25 @@
         </svg>
       </button>
     </Transition>
+
+    <!-- Gesture Overlay -->
+    <Transition name="vm-fade">
+      <div v-if="gestureOverlay.show" class="vm-gesture-overlay">
+        {{ gestureOverlay.text }}
+      </div>
+    </Transition>
+
+    <!-- Mini Player Close Button -->
+    <button 
+      v-if="isMiniPlayer" 
+      class="vm-mini-close" 
+      @click="closeMiniPlayer"
+      aria-label="Close mini player"
+    >
+      <svg class="vm-icon" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
 
     <!-- Controls -->
     <Transition name="vm-fade">
@@ -214,6 +242,9 @@ const props = withDefaults(defineProps<VideoPlayerProps>(), {
   showSpeed: true,
   showFullscreen: true,
   showThumbnailPreview: true,
+  touchGestures: true,
+  miniPlayer: false,
+  miniPlayerPosition: 'bottom-right',
 })
 
 const emit = defineEmits<{
@@ -241,7 +272,19 @@ const hoverPosition = ref(0)
 const thumbnailCanvas = ref(false)
 const isPiP = ref(false)
 const isPiPSupported = ref(false)
+const isMiniPlayer = ref(false)
+const gestureOverlay = ref<{ show: boolean; text: string }>({ show: false, text: '' })
 let hideControlsTimeout: ReturnType<typeof setTimeout> | null = null
+let gestureOverlayTimeout: ReturnType<typeof setTimeout> | null = null
+let intersectionObserver: IntersectionObserver | null = null
+
+// Touch gesture state
+let touchStartX = 0
+let touchStartY = 0
+let touchStartTime = 0
+let touchStartVolume = 0
+let isSwiping = false
+let swipeDirection: 'horizontal' | 'vertical' | null = null
 
 // Also get seek from useMediaControl
 const {
@@ -530,6 +573,96 @@ async function generateThumbnail(time: number) {
   }
 }
 
+// Touch Gesture Handlers
+function handleTouchStart(e: TouchEvent) {
+  if (!props.touchGestures || e.touches.length !== 1) return
+  
+  const touch = e.touches[0]
+  touchStartX = touch.clientX
+  touchStartY = touch.clientY
+  touchStartTime = state.value.currentTime
+  touchStartVolume = state.value.volume
+  isSwiping = false
+  swipeDirection = null
+}
+
+function handleTouchMove(e: TouchEvent) {
+  if (!props.touchGestures || e.touches.length !== 1 || !touchStartX) return
+  
+  const touch = e.touches[0]
+  const deltaX = touch.clientX - touchStartX
+  const deltaY = touch.clientY - touchStartY
+  
+  // Determine swipe direction on first move
+  if (!swipeDirection && (Math.abs(deltaX) > 10 || Math.abs(deltaY) > 10)) {
+    swipeDirection = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical'
+    isSwiping = true
+  }
+  
+  if (!isSwiping) return
+  
+  if (swipeDirection === 'horizontal') {
+    // Horizontal swipe: seek
+    const seekDelta = (deltaX / 200) * 30 // 200px = 30s
+    const newTime = Math.max(0, Math.min(state.value.duration, touchStartTime + seekDelta))
+    seek(newTime)
+    
+    const timeDiff = newTime - touchStartTime
+    showGestureOverlay(timeDiff >= 0 ? `+${Math.round(timeDiff)}s` : `${Math.round(timeDiff)}s`)
+  } else {
+    // Vertical swipe: volume (invert because swipe up = more volume)
+    const volumeDelta = -deltaY / 200 // 200px = 100% volume
+    const newVolume = Math.max(0, Math.min(1, touchStartVolume + volumeDelta))
+    setVolume(newVolume)
+    
+    showGestureOverlay(`音量 ${Math.round(newVolume * 100)}%`)
+  }
+}
+
+function handleTouchEnd() {
+  touchStartX = 0
+  touchStartY = 0
+  isSwiping = false
+  swipeDirection = null
+  
+  // Hide overlay after a short delay
+  if (gestureOverlayTimeout) {
+    clearTimeout(gestureOverlayTimeout)
+  }
+  gestureOverlayTimeout = setTimeout(() => {
+    gestureOverlay.value.show = false
+  }, 500)
+}
+
+function showGestureOverlay(text: string) {
+  gestureOverlay.value = { show: true, text }
+}
+
+// Mini Player IntersectionObserver
+function setupMiniPlayerObserver() {
+  if (!props.miniPlayer || !containerRef.value) return
+  
+  intersectionObserver = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0]
+      // Enter mini player mode when less than 30% visible and video is playing
+      if (!entry.isIntersecting && state.value.playing && !isFullscreen.value && !isPiP.value) {
+        isMiniPlayer.value = true
+      } else if (entry.isIntersecting) {
+        isMiniPlayer.value = false
+      }
+    },
+    { threshold: 0.3 }
+  )
+  
+  intersectionObserver.observe(containerRef.value)
+}
+
+function closeMiniPlayer() {
+  isMiniPlayer.value = false
+  // Optionally pause the video when closing mini player
+  // pause()
+}
 
 
 // Lifecycle
@@ -550,6 +683,9 @@ onMounted(() => {
   if (props.globalKeyboardShortcuts) {
     document.addEventListener('keydown', handleKeydown)
   }
+  
+  // Setup mini player observer
+  setupMiniPlayerObserver()
 })
 
 onUnmounted(() => {
@@ -557,6 +693,9 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
   if (hideControlsTimeout) {
     clearTimeout(hideControlsTimeout)
+  }
+  if (gestureOverlayTimeout) {
+    clearTimeout(gestureOverlayTimeout)
   }
   
   // Remove PiP event listeners
@@ -568,6 +707,11 @@ onUnmounted(() => {
   // Remove global keyboard event listener
   if (props.globalKeyboardShortcuts) {
     document.removeEventListener('keydown', handleKeydown)
+  }
+  
+  // Disconnect intersection observer
+  if (intersectionObserver) {
+    intersectionObserver.disconnect()
   }
   
   // Clean up thumbnail video
@@ -833,5 +977,95 @@ defineExpose({
 .vm-speed-option.vm-active {
   color: var(--vm-primary);
   font-weight: 600;
+}
+
+/* Gesture Overlay */
+.vm-gesture-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px 32px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Mini Player Mode */
+.vm-mini-player {
+  position: fixed !important;
+  width: 320px !important;
+  height: 180px !important;
+  z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vm-mini-player .vm-controls {
+  padding: 0 8px 6px;
+}
+
+.vm-mini-player .vm-time,
+.vm-mini-player .vm-speed-container {
+  display: none;
+}
+
+.vm-mini-player .vm-play-overlay {
+  width: 48px;
+  height: 48px;
+}
+
+/* Mini Player Positions */
+.vm-mini-bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.vm-mini-bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.vm-mini-top-right {
+  top: 20px;
+  right: 20px;
+}
+
+.vm-mini-top-left {
+  top: 20px;
+  left: 20px;
+}
+
+/* Mini Player Close Button */
+.vm-mini-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 10;
+  transition: background var(--vm-transition-fast);
+}
+
+.vm-mini-close:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.vm-mini-close .vm-icon {
+  width: 16px;
+  height: 16px;
 }
 </style>

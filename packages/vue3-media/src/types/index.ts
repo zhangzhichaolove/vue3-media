@@ -46,6 +46,12 @@ export interface VideoPlayerProps {
   showFullscreen?: boolean
   /** Show thumbnail preview on progress bar hover */
   showThumbnailPreview?: boolean
+  /** Enable touch gestures for mobile (swipe to seek/volume) */
+  touchGestures?: boolean
+  /** Enable mini player when scrolled out of view */
+  miniPlayer?: boolean
+  /** Mini player position */
+  miniPlayerPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
 }
 
 // Audio Player Props

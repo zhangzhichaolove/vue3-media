@@ -106,6 +106,18 @@ A modern video player with all the controls you need.
 | `showSpeed` | `boolean` | `true` | Show playback speed button |
 | `showFullscreen` | `boolean` | `true` | Show fullscreen button |
 | `showThumbnailPreview` | `boolean` | `true` | Show thumbnail on progress bar hover |
+| `touchGestures` | `boolean` | `true` | Enable touch gestures (swipe to seek/volume) |
+| `miniPlayer` | `boolean` | `false` | Enable mini player when scrolled out of view |
+| `miniPlayerPosition` | `string` | `'bottom-right'` | Mini player position (`bottom-right`, `bottom-left`, `top-right`, `top-left`) |
+
+### Touch Gestures (Mobile)
+
+When `touchGestures` is enabled:
+
+| Gesture | Action |
+|---------|--------|
+| Swipe Left/Right | Seek forward/backward |
+| Swipe Up/Down | Increase/decrease volume |
 
 ### Keyboard Shortcuts
 
