@@ -1,6 +1,6 @@
 {
   "name": "@peakchao/vue3-media",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A beautiful Vue 3 media player component library with video and audio players",
   "type": "module",
   "sideEffects": [
@@ -15,8 +15,14 @@
       "import": "./dist/vue3-media.js",
       "require": "./dist/vue3-media.umd.cjs"
     },
-    "./*": "./*",
-    "./style": "./dist/vue3-media.css"
+    "./style": {
+      "types": "./dist/types/style.d.ts",
+      "import": "./dist/vue3-media.css",
+      "require": "./dist/vue3-media.css",
+      "default": "./dist/vue3-media.css"
+    },
+    "./style.css": "./dist/vue3-media.css",
+    "./*": "./*"
   },
   "files": [
     "dist"

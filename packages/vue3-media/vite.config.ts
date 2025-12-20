@@ -9,7 +9,8 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       outDir: 'dist/types',
-      include: ['src/**/*.ts', 'src/**/*.vue'],
+      include: ['src/**/*.ts', 'src/**/*.d.ts', 'src/**/*.vue'],
+      copyDtsFiles: true,
     }),
   ],
   build: {
