@@ -55,7 +55,7 @@
             :src="audioSrc"
             title="Sample Music Track"
             artist="Demo Artist"
-            cover="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=300&fit=crop"
+            cover="https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.jpg"
             :primaryColor="primaryColor"
             :darkMode="darkMode"
             @play="logEvent('Audio: play')"
@@ -113,8 +113,8 @@ const primaryColor = ref('#6366f1')
 const events = ref<string[]>([])
 
 // Sample media URLs (using public domain samples)
-const videoSrc = 'https://www.w3schools.com/html/mov_bbb.mp4'
-const audioSrc = 'https://www.w3schools.com/html/horse.ogg'
+const videoSrc = 'https://file.peakchao.com:5/%E7%82%AB%E9%85%B7%E8%A3%85%E6%9C%BA%E8%A7%86%E9%A2%91.mp4'
+const audioSrc = 'https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.mp3'
 
 // Event handlers
 function logEvent(message: string) {

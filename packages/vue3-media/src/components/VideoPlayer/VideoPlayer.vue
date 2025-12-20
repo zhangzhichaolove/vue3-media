@@ -507,10 +507,15 @@ defineExpose({
   width: 0;
   overflow: hidden;
   transition: width var(--vm-transition);
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  margin: -4px 0;
 }
 
 .vm-volume-container:hover .vm-volume-slider-container {
   width: 80px;
+  overflow: visible;
 }
 
 .vm-volume-slider {
