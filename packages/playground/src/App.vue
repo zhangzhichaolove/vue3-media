@@ -32,6 +32,7 @@
             @ended="logEvent('Video: ended')"
             @timeupdate="handleTimeUpdate"
             :globalKeyboardShortcuts="true"
+            :miniPlayer="true"
           />
         </div>
         

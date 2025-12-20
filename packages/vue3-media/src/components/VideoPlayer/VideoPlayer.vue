@@ -1,19 +1,25 @@
 <template>
-  <div
-    ref="containerRef"
-    class="vm-player vm-video-player"
-    :class="{ 
-      'vm-dark': darkMode, 
-      'vm-fullscreen': isFullscreen,
-      'vm-mini-player': isMiniPlayer,
-      [`vm-mini-${miniPlayerPosition}`]: isMiniPlayer
-    }"
-    :style="containerStyle"
-    tabindex="0"
-    @mousemove="handleMouseMove"
-    @mouseleave="handleMouseLeave"
-    @keydown="handleKeydown"
+  <!-- Wrapper to maintain layout space when in mini player mode -->
+  <div 
+    ref="wrapperRef"
+    class="vm-player-wrapper"
+    :style="wrapperStyle"
   >
+    <div
+      ref="containerRef"
+      class="vm-player vm-video-player"
+      :class="{ 
+        'vm-dark': darkMode, 
+        'vm-fullscreen': isFullscreen,
+        'vm-mini-player': isMiniPlayer,
+        [`vm-mini-${miniPlayerPosition}`]: isMiniPlayer
+      }"
+      :style="containerStyle"
+      tabindex="0"
+      @mousemove="handleMouseMove"
+      @mouseleave="handleMouseLeave"
+      @keydown="handleKeydown"
+    >
     <!-- Video Element -->
     <video
       ref="videoRef"
@@ -217,6 +223,7 @@
         </div>
       </div>
     </Transition>
+    </div>
   </div>
 </template>
 
@@ -258,6 +265,7 @@ const emit = defineEmits<{
 }>()
 
 // Refs
+const wrapperRef = ref<HTMLDivElement | null>(null)
 const containerRef = ref<HTMLDivElement | null>(null)
 const videoRef = ref<HTMLVideoElement | null>(null)
 const thumbnailCanvasRef = ref<HTMLCanvasElement | null>(null)
@@ -318,6 +326,19 @@ const containerStyle = computed(() => ({
   '--vm-primary-hover': adjustColor(props.primaryColor, -15),
   '--vm-primary-light': hexToRgba(props.primaryColor, 0.2),
 }))
+
+// Wrapper style to maintain layout space when in mini player mode
+const wrapperStyle = computed(() => {
+  if (!isMiniPlayer.value) {
+    return {}
+  }
+  // When in mini mode, wrapper keeps the original size to prevent layout shift
+  return {
+    width: typeof props.width === 'number' ? `${props.width}px` : props.width,
+    height: typeof props.height === 'number' ? `${props.height}px` : 'auto',
+    aspectRatio: '16 / 9',
+  }
+})
 
 // Thumbnail tooltip style with edge clamping
 const thumbnailTooltipStyle = computed(() => {
@@ -640,7 +661,7 @@ function showGestureOverlay(text: string) {
 
 // Mini Player IntersectionObserver
 function setupMiniPlayerObserver() {
-  if (!props.miniPlayer || !containerRef.value) return
+  if (!props.miniPlayer || !wrapperRef.value) return
   
   intersectionObserver = new IntersectionObserver(
     (entries) => {
@@ -655,7 +676,8 @@ function setupMiniPlayerObserver() {
     { threshold: 0.3 }
   )
   
-  intersectionObserver.observe(containerRef.value)
+  // Observe the wrapper (stays in document flow) instead of container (becomes fixed)
+  intersectionObserver.observe(wrapperRef.value)
 }
 
 function closeMiniPlayer() {
@@ -745,6 +767,13 @@ defineExpose({
 
 <style scoped>
 @import '@/styles/base.css';
+
+/* Player Wrapper - maintains layout space in mini mode */
+.vm-player-wrapper {
+  position: relative;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--vm-border-radius);
+}
 
 .vm-video-player {
   position: relative;

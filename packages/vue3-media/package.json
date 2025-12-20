@@ -1,6 +1,6 @@
 {
   "name": "@peakchao/vue3-media",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A beautiful Vue 3 media player component library with video and audio players",
   "type": "module",
   "sideEffects": [
