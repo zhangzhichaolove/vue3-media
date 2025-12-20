@@ -100,6 +100,44 @@ A modern video player with all the controls you need.
 | `darkMode` | `boolean` | `false` | Enable dark mode |
 | `playbackRates` | `number[]` | `[0.5, 0.75, 1, 1.25, 1.5, 2]` | Available playback speeds |
 | `preload` | `'auto' \| 'metadata' \| 'none'` | `'metadata'` | Preload behavior |
+| `keyboardShortcuts` | `boolean` | `true` | Enable keyboard shortcuts |
+| `globalKeyboardShortcuts` | `boolean` | `false` | Enable global keyboard shortcuts (listen on entire page) |
+| `showPiP` | `boolean` | `true` | Show Picture-in-Picture button |
+| `showSpeed` | `boolean` | `true` | Show playback speed button |
+| `showFullscreen` | `boolean` | `true` | Show fullscreen button |
+| `showThumbnailPreview` | `boolean` | `true` | Show thumbnail on progress bar hover |
+
+### Keyboard Shortcuts
+
+When `keyboardShortcuts` is enabled:
+
+| Key | Action |
+|-----|--------|
+| `Space` | Play/Pause |
+| `←` / `→` | Seek ±5 seconds |
+| `↑` / `↓` | Volume ±10% |
+| `M` | Mute/Unmute |
+| `F` | Toggle Fullscreen |
+| `Escape` | Exit Fullscreen/PiP |
+
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `controls-left` | Custom buttons before built-in right controls |
+| `controls` | Custom buttons after speed/PiP, before fullscreen |
+
+### Custom Controls Example
+
+```vue
+<VideoPlayer src="video.mp4">
+  <template #controls>
+    <button class="vm-btn" @click="handleDownload">
+      <DownloadIcon />
+    </button>
+  </template>
+</VideoPlayer>
+```
 
 ### Events
 
@@ -125,6 +163,7 @@ playerRef.value.seek(30) // Seek to 30 seconds
 playerRef.value.setVolume(0.5) // Set volume to 50%
 playerRef.value.setPlaybackRate(1.5) // Set speed to 1.5x
 playerRef.value.toggleFullscreen()
+playerRef.value.togglePiP() // Toggle Picture-in-Picture
 playerRef.value.getState() // Get current player state
 ```
 

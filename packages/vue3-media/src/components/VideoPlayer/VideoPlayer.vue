@@ -4,8 +4,10 @@
     class="vm-player vm-video-player"
     :class="{ 'vm-dark': darkMode, 'vm-fullscreen': isFullscreen }"
     :style="containerStyle"
+    tabindex="0"
     @mousemove="handleMouseMove"
     @mouseleave="handleMouseLeave"
+    @keydown="handleKeydown"
   >
     <!-- Video Element -->
     <video
@@ -50,7 +52,12 @@
         class="vm-controls"
       >
         <!-- Progress Bar -->
-        <div class="vm-progress-container" @click="handleProgressClick">
+        <div 
+          class="vm-progress-container" 
+          @click="handleProgressClick"
+          @mousemove="handleProgressHover"
+          @mouseleave="handleProgressLeave"
+        >
           <div class="vm-progress-bar">
             <div class="vm-progress-buffered" :style="{ width: state.buffered + '%' }"></div>
             <div class="vm-progress-played" :style="{ width: progress + '%' }"></div>
@@ -65,12 +72,20 @@
             @input="handleSeek"
             aria-label="Seek"
           />
+          <!-- Thumbnail Preview -->
           <div 
             v-if="hoverTime !== null" 
-            class="vm-progress-tooltip"
-            :style="{ left: hoverPosition + '%' }"
+            class="vm-progress-tooltip vm-thumbnail-tooltip"
+            :style="thumbnailTooltipStyle"
           >
-            {{ formatTime(hoverTime) }}
+            <canvas 
+              v-if="thumbnailCanvas"
+              ref="thumbnailCanvasRef"
+              class="vm-thumbnail-canvas"
+              :width="160"
+              :height="90"
+            ></canvas>
+            <span class="vm-thumbnail-time">{{ formatTime(hoverTime) }}</span>
           </div>
         </div>
 
@@ -120,8 +135,11 @@
           </div>
 
           <div class="vm-controls-right">
+            <!-- Custom Controls Slot (before built-in controls) -->
+            <slot name="controls-left"></slot>
+
             <!-- Playback Speed -->
-            <div class="vm-speed-container">
+            <div v-if="showSpeed" class="vm-speed-container">
               <button class="vm-btn vm-speed-btn" @click="toggleSpeedMenu" aria-label="Playback speed">
                 {{ state.playbackRate }}x
               </button>
@@ -140,8 +158,26 @@
               </Transition>
             </div>
 
+            <!-- Picture-in-Picture -->
+            <button 
+              v-if="showPiP && isPiPSupported" 
+              class="vm-btn" 
+              @click="togglePiP" 
+              :aria-label="isPiP ? 'Exit Picture-in-Picture' : 'Picture-in-Picture'"
+            >
+              <svg v-if="isPiP" class="vm-icon" viewBox="0 0 24 24">
+                <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+              </svg>
+              <svg v-else class="vm-icon" viewBox="0 0 24 24">
+                <path d="M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+              </svg>
+            </button>
+
+            <!-- Custom Controls Slot (after built-in controls) -->
+            <slot name="controls"></slot>
+
             <!-- Fullscreen -->
-            <button class="vm-btn" @click="toggleFullscreen" :aria-label="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'">
+            <button v-if="showFullscreen" class="vm-btn" @click="toggleFullscreen" :aria-label="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'">
               <svg v-if="isFullscreen" class="vm-icon" viewBox="0 0 24 24">
                 <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
               </svg>
@@ -157,7 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useMediaControl } from '@/composables/useMediaControl'
 import type { VideoPlayerProps, TimeUpdatePayload, VolumeChangePayload, MediaError } from '@/types'
 
@@ -172,6 +208,12 @@ const props = withDefaults(defineProps<VideoPlayerProps>(), {
   darkMode: false,
   playbackRates: () => [0.5, 0.75, 1, 1.25, 1.5, 2],
   preload: 'metadata',
+  keyboardShortcuts: true,
+  globalKeyboardShortcuts: false,
+  showPiP: true,
+  showSpeed: true,
+  showFullscreen: true,
+  showThumbnailPreview: true,
 })
 
 const emit = defineEmits<{
@@ -187,6 +229,8 @@ const emit = defineEmits<{
 // Refs
 const containerRef = ref<HTMLDivElement | null>(null)
 const videoRef = ref<HTMLVideoElement | null>(null)
+const thumbnailCanvasRef = ref<HTMLCanvasElement | null>(null)
+const thumbnailVideoRef = ref<HTMLVideoElement | null>(null)
 
 // State
 const showControls = ref(true)
@@ -194,15 +238,19 @@ const showSpeedMenu = ref(false)
 const isFullscreen = ref(false)
 const hoverTime = ref<number | null>(null)
 const hoverPosition = ref(0)
+const thumbnailCanvas = ref(false)
+const isPiP = ref(false)
+const isPiPSupported = ref(false)
 let hideControlsTimeout: ReturnType<typeof setTimeout> | null = null
 
-// Media Control
+// Also get seek from useMediaControl
 const {
   state,
   progress,
   formattedCurrentTime,
   formattedDuration,
   togglePlay,
+  seek,
   seekPercentage,
   setVolume,
   toggleMute,
@@ -227,6 +275,30 @@ const containerStyle = computed(() => ({
   '--vm-primary-hover': adjustColor(props.primaryColor, -15),
   '--vm-primary-light': hexToRgba(props.primaryColor, 0.2),
 }))
+
+// Thumbnail tooltip style with edge clamping
+const thumbnailTooltipStyle = computed(() => {
+  const position = hoverPosition.value
+  
+  // Calculate transform based on position
+  // At 0%: no translateX (align left edge)
+  // At 50%: translateX(-50%) (centered)
+  // At 100%: translateX(-100%) (align right edge)
+  let translateX = -50 // default center
+  
+  if (position < 10) {
+    // Near left edge: gradually shift from 0 to -50
+    translateX = -(position * 5)
+  } else if (position > 90) {
+    // Near right edge: gradually shift from -50 to -100
+    translateX = -50 - ((position - 90) * 5)
+  }
+  
+  return {
+    left: `${position}%`,
+    transform: `translateX(${translateX}%)`
+  }
+})
 
 // Methods
 function adjustColor(hex: string, percent: number): string {
@@ -317,12 +389,167 @@ function handleClickOutside(e: MouseEvent) {
   }
 }
 
+// Picture-in-Picture
+function togglePiP() {
+  if (!videoRef.value) return
+  
+  if (document.pictureInPictureElement) {
+    document.exitPictureInPicture()
+  } else {
+    videoRef.value.requestPictureInPicture()
+  }
+}
+
+function handleEnterPiP() {
+  isPiP.value = true
+}
+
+function handleLeavePiP() {
+  isPiP.value = false
+}
+
+// Keyboard Shortcuts
+function handleKeydown(e: KeyboardEvent) {
+  // Skip if keyboard shortcuts are disabled
+  if (!props.keyboardShortcuts) return
+  
+  // Prevent default for handled keys
+  const handledKeys = ['Space', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyM', 'KeyF', 'Escape']
+  if (!handledKeys.includes(e.code)) return
+  
+  e.preventDefault()
+  
+  switch (e.code) {
+    case 'Space':
+      togglePlay()
+      break
+    case 'ArrowLeft':
+      seek(state.value.currentTime - 5)
+      break
+    case 'ArrowRight':
+      seek(state.value.currentTime + 5)
+      break
+    case 'ArrowUp':
+      setVolume(Math.min(1, state.value.volume + 0.1))
+      break
+    case 'ArrowDown':
+      setVolume(Math.max(0, state.value.volume - 0.1))
+      break
+    case 'KeyM':
+      toggleMute()
+      break
+    case 'KeyF':
+      toggleFullscreen()
+      break
+    case 'Escape':
+      if (isFullscreen.value) {
+        document.exitFullscreen()
+      } else if (isPiP.value && document.pictureInPictureElement) {
+        document.exitPictureInPicture()
+      }
+      break
+  }
+}
+
+// Progress Bar Hover for Thumbnail Preview
+async function handleProgressHover(e: MouseEvent) {
+  const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  const percentage = ((e.clientX - rect.left) / rect.width) * 100
+  hoverPosition.value = Math.max(0, Math.min(100, percentage))
+  hoverTime.value = (percentage / 100) * state.value.duration
+  
+  // Generate thumbnail only if enabled
+  if (props.showThumbnailPreview && videoRef.value && state.value.duration > 0) {
+    thumbnailCanvas.value = true
+    // Wait for canvas to be rendered
+    await nextTick()
+    generateThumbnail(hoverTime.value)
+  }
+}
+
+function handleProgressLeave() {
+  hoverTime.value = null
+  thumbnailCanvas.value = false
+}
+
+let thumbnailGenerating = false
+let thumbnailVideoReady = false
+
+async function generateThumbnail(time: number) {
+  if (!videoRef.value || !thumbnailCanvasRef.value || thumbnailGenerating) return
+  
+  const canvas = thumbnailCanvasRef.value
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  
+  // Create or update the temporary video element
+  if (!thumbnailVideoRef.value) {
+    thumbnailVideoRef.value = document.createElement('video')
+    thumbnailVideoRef.value.preload = 'metadata'
+    thumbnailVideoRef.value.muted = true
+    thumbnailVideoRef.value.playsInline = true
+    thumbnailVideoRef.value.src = videoRef.value.src
+    
+    // Wait for video to be ready
+    await new Promise<void>((resolve) => {
+      const onLoaded = () => {
+        thumbnailVideoRef.value?.removeEventListener('loadeddata', onLoaded)
+        thumbnailVideoReady = true
+        resolve()
+      }
+      thumbnailVideoRef.value!.addEventListener('loadeddata', onLoaded)
+    })
+  }
+  
+  if (!thumbnailVideoReady) return
+  
+  const thumbVideo = thumbnailVideoRef.value
+  
+  // Only seek if time is significantly different
+  if (Math.abs(thumbVideo.currentTime - time) > 0.5) {
+    thumbnailGenerating = true
+    thumbVideo.currentTime = time
+    
+    await new Promise<void>((resolve) => {
+      const onSeeked = () => {
+        thumbVideo.removeEventListener('seeked', onSeeked)
+        resolve()
+      }
+      thumbVideo.addEventListener('seeked', onSeeked)
+    })
+    
+    thumbnailGenerating = false
+  }
+  
+  // Draw frame to canvas
+  try {
+    ctx.drawImage(thumbVideo, 0, 0, canvas.width, canvas.height)
+  } catch (e) {
+    // CORS error - can't draw cross-origin video
+    console.warn('Cannot generate thumbnail due to CORS restrictions')
+  }
+}
+
 
 
 // Lifecycle
 onMounted(() => {
   document.addEventListener('fullscreenchange', handleFullscreenChange)
   document.addEventListener('click', handleClickOutside)
+  
+  // Check PiP support
+  isPiPSupported.value = 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled
+  
+  // Add PiP event listeners to video element
+  if (videoRef.value) {
+    videoRef.value.addEventListener('enterpictureinpicture', handleEnterPiP)
+    videoRef.value.addEventListener('leavepictureinpicture', handleLeavePiP)
+  }
+  
+  // Add global keyboard event listener if enabled
+  if (props.globalKeyboardShortcuts) {
+    document.addEventListener('keydown', handleKeydown)
+  }
 })
 
 onUnmounted(() => {
@@ -330,6 +557,23 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
   if (hideControlsTimeout) {
     clearTimeout(hideControlsTimeout)
+  }
+  
+  // Remove PiP event listeners
+  if (videoRef.value) {
+    videoRef.value.removeEventListener('enterpictureinpicture', handleEnterPiP)
+    videoRef.value.removeEventListener('leavepictureinpicture', handleLeavePiP)
+  }
+  
+  // Remove global keyboard event listener
+  if (props.globalKeyboardShortcuts) {
+    document.removeEventListener('keydown', handleKeydown)
+  }
+  
+  // Clean up thumbnail video
+  if (thumbnailVideoRef.value) {
+    thumbnailVideoRef.value.src = ''
+    thumbnailVideoRef.value = null
   }
 })
 
@@ -350,6 +594,7 @@ defineExpose({
   setVolume,
   setPlaybackRate,
   toggleFullscreen,
+  togglePiP,
   getState: () => state.value,
 })
 </script>
@@ -363,6 +608,7 @@ defineExpose({
   border-radius: var(--vm-border-radius);
   overflow: hidden;
   box-shadow: var(--vm-shadow-lg);
+  outline: none;
 }
 
 .vm-video {
@@ -479,6 +725,27 @@ defineExpose({
   white-space: nowrap;
   pointer-events: none;
   margin-bottom: 4px;
+}
+
+/* Thumbnail Preview - overwrites default tooltip transform */
+.vm-thumbnail-tooltip {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  /* transform is set dynamically via JS for edge clamping */
+}
+
+.vm-thumbnail-canvas {
+  display: block;
+  border-radius: 2px;
+  background: #000;
+}
+
+.vm-thumbnail-time {
+  font-size: 11px;
+  font-weight: 500;
 }
 
 /* Controls Bar */

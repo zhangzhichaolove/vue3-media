@@ -31,6 +31,7 @@
             @pause="logEvent('Video: pause')"
             @ended="logEvent('Video: ended')"
             @timeupdate="handleTimeUpdate"
+            :globalKeyboardShortcuts="true"
           />
         </div>
         

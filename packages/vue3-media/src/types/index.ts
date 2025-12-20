@@ -34,6 +34,18 @@ export interface VideoPlayerProps {
   playbackRates?: number[]
   /** Preload behavior */
   preload?: 'auto' | 'metadata' | 'none'
+  /** Enable keyboard shortcuts (Space, arrows, M, F, Escape) */
+  keyboardShortcuts?: boolean
+  /** Enable global keyboard shortcuts (listen on entire page, not just player) */
+  globalKeyboardShortcuts?: boolean
+  /** Show Picture-in-Picture button */
+  showPiP?: boolean
+  /** Show playback speed button */
+  showSpeed?: boolean
+  /** Show fullscreen button */
+  showFullscreen?: boolean
+  /** Show thumbnail preview on progress bar hover */
+  showThumbnailPreview?: boolean
 }
 
 // Audio Player Props
