@@ -30,8 +30,7 @@ pnpm add vue3-media
 
 pnpm --filter vue3-media build
 pnpm --filter playground dev
-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
-npm set //registry.npmjs.org/:_authToken=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
+npm set //registry.npmjs.org/:_authToken=xxx
 ```
 
 ## 🚀 Quick Start
