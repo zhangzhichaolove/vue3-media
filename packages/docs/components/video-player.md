@@ -24,7 +24,7 @@ const primaryColor = ref('#6366f1')
 
 <div class="demo-container demo-container--video" :style="{ background: darkMode ? '#1a1a2e' : '' }">
   <VideoPlayer
-    src="https://file.peakchao.com:5/%E7%82%AB%E9%85%B7%E8%A3%85%E6%9C%BA%E8%A7%86%E9%A2%91.mp4"
+    src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
     poster="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1280&h=720&fit=crop"
     :primaryColor="primaryColor"
     :darkMode="darkMode"

@@ -24,10 +24,10 @@ const primaryColor = ref('#6366f1')
 
 <div class="demo-container demo-container--audio" :style="{ background: darkMode ? '#1a1a2e' : '' }">
   <AudioPlayer
-    src="https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.mp3"
-    title="红玫瑰"
-    artist="陈奕迅"
-    cover="https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.jpg"
+    src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+    title="SoundHelix Song 1"
+    artist="T. Schürger"
+    cover="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&h=300&fit=crop"
     :primaryColor="primaryColor"
     :darkMode="darkMode"
   />
