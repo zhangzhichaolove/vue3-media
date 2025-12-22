@@ -1,230 +1,144 @@
-# Vue3 Media
+# Vue3 Media 🎬
 
-🎬 A beautiful Vue 3 media player component library with video and audio players.
-
+[![npm version](https://img.shields.io/npm/v/@peakchao/vue3-media.svg)](https://www.npmjs.com/package/@peakchao/vue3-media)
 [![Vue 3](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+[中文](./README.zh-CN.md) | English
+
+A beautiful, feature-rich media player component library for Vue 3. Includes customizable Video and Audio players with modern UI, dark mode support, and full TypeScript integration.
+
+📚 **[Documentation](https://zhangzhichaolove.github.io/vue3-media/en/)**
+
 ## ✨ Features
 
-- 🎥 **Video Player** - Full-featured video player with custom controls
+- 🎥 **Video Player** - Full-featured video player with custom controls, Picture-in-Picture, and mini player
 - 🎵 **Audio Player** - Beautiful audio player with album art support
-- 🎨 **Customizable Theme** - Primary color configuration
 - 🌙 **Dark Mode** - Built-in dark mode support
-- 📱 **Responsive** - Mobile-friendly design
-- 🔧 **TypeScript** - Full TypeScript support
+- 🎨 **Customizable** - Easily customize primary color and themes
+- 📱 **Responsive** - Mobile-friendly design with touch gestures
+- ⌨️ **Keyboard Shortcuts** - Full keyboard control support
+- ♿ **Accessible** - Screen reader friendly
+- 🔧 **TypeScript** - Complete type definitions included
 - ⚡ **Lightweight** - No external dependencies
 
 ## 📦 Installation
 
 ```bash
 # npm
-npm install vue3-media
+npm install @peakchao/vue3-media
 
 # yarn
-yarn add vue3-media
+yarn add @peakchao/vue3-media
 
 # pnpm
-pnpm add vue3-media
-
-pnpm --filter vue3-media build
-pnpm --filter playground dev
-npm set //registry.npmjs.org/:_authToken=xxx
+pnpm add @peakchao/vue3-media
 ```
 
 ## 🚀 Quick Start
 
-### 方式一：全局注册所有组件
+### Import Styles
 
 ```ts
-import { createApp } from 'vue'
-import Vue3Media from 'vue3-media'
-import 'vue3-media/dist/vue3-media.css'
-
-const app = createApp(App)
-app.use(Vue3Media)  // 注册所有组件
-app.mount('#app')
+// main.ts
+import '@peakchao/vue3-media/style'
 ```
 
-### 方式二：按需全局注册
-
-```ts
-import { createApp } from 'vue'
-import { VideoPlayer, AudioPlayer } from 'vue3-media'
-import 'vue3-media/dist/vue3-media.css'
-
-const app = createApp(App)
-app.use(VideoPlayer)  // 只注册 VideoPlayer
-app.use(AudioPlayer)  // 只注册 AudioPlayer
-app.mount('#app')
-```
-
-### 方式三：组件内按需引入
+### Use Components
 
 ```vue
-<script setup lang="ts">
-import { VideoPlayer, AudioPlayer } from 'vue3-media'
-import 'vue3-media/dist/vue3-media'
+<script setup>
+import { VideoPlayer, AudioPlayer } from '@peakchao/vue3-media'
 </script>
 
 <template>
-  <VideoPlayer src="video.mp4" />
-  <AudioPlayer src="audio.mp3" />
-</template>
-```
-
-## 📖 Components
-
-### VideoPlayer
-
-A full-featured video player with custom controls.
-
-```vue
-<template>
+  <!-- Video Player -->
   <VideoPlayer
     src="https://example.com/video.mp4"
     poster="https://example.com/poster.jpg"
-    :autoplay="false"
-    :loop="false"
-    :muted="false"
-    :controls="true"
-    width="100%"
-    height="auto"
-    primaryColor="#6366f1"
-    :darkMode="false"
-    :playbackRates="[0.5, 1, 1.5, 2]"
-    @play="onPlay"
-    @pause="onPause"
-    @ended="onEnded"
-    @timeupdate="onTimeUpdate"
-    @volumechange="onVolumeChange"
-    @error="onError"
-    @loadedmetadata="onLoadedMetadata"
   />
-</template>
-```
 
-#### Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `src` | `string` | **required** | Video source URL |
-| `poster` | `string` | - | Poster image URL |
-| `autoplay` | `boolean` | `false` | Auto play on load |
-| `loop` | `boolean` | `false` | Loop playback |
-| `muted` | `boolean` | `false` | Start muted |
-| `controls` | `boolean` | `true` | Show controls |
-| `width` | `string \| number` | `'100%'` | Player width |
-| `height` | `string \| number` | `'auto'` | Player height |
-| `primaryColor` | `string` | `'#6366f1'` | Primary theme color |
-| `darkMode` | `boolean` | `false` | Enable dark mode |
-| `playbackRates` | `number[]` | `[0.5, 0.75, 1, 1.25, 1.5, 2]` | Playback speed options |
-| `preload` | `'auto' \| 'metadata' \| 'none'` | `'metadata'` | Preload behavior |
-
-### AudioPlayer
-
-A beautiful audio player with album art support.
-
-```vue
-<template>
+  <!-- Audio Player -->
   <AudioPlayer
     src="https://example.com/audio.mp3"
     title="Song Title"
     artist="Artist Name"
     cover="https://example.com/cover.jpg"
-    :autoplay="false"
-    :loop="false"
-    primaryColor="#6366f1"
-    :darkMode="false"
-    @play="onPlay"
-    @pause="onPause"
-    @ended="onEnded"
-    @timeupdate="onTimeUpdate"
-    @volumechange="onVolumeChange"
-    @error="onError"
   />
 </template>
 ```
 
-#### Props
+### Global Registration (Optional)
+
+```ts
+import { createApp } from 'vue'
+import Vue3Media from '@peakchao/vue3-media'
+import '@peakchao/vue3-media/style'
+
+const app = createApp(App)
+app.use(Vue3Media)
+app.mount('#app')
+```
+
+## 📹 VideoPlayer
+
+A modern video player with all the controls you need.
+
+### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `src` | `string` | **required** | Audio source URL |
+| `src` | `string` | *required* | Video source URL |
+| `poster` | `string` | - | Poster image URL |
+| `autoplay` | `boolean` | `false` | Auto-play video on load |
+| `loop` | `boolean` | `false` | Loop video playback |
+| `muted` | `boolean` | `false` | Mute video by default |
+| `controls` | `boolean` | `true` | Show player controls |
+| `primaryColor` | `string` | `'#6366f1'` | Theme primary color |
+| `darkMode` | `boolean` | `false` | Enable dark mode |
+| `keyboardShortcuts` | `boolean` | `true` | Enable keyboard shortcuts |
+| `showPiP` | `boolean` | `true` | Show Picture-in-Picture button |
+| `miniPlayer` | `boolean` | `false` | Enable mini player mode |
+
+### Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Space` | Play/Pause |
+| `←` / `→` | Seek ±5 seconds |
+| `↑` / `↓` | Volume ±10% |
+| `M` | Mute/Unmute |
+| `F` | Toggle Fullscreen |
+
+## 🎵 AudioPlayer
+
+An elegant audio player with cover art and track info display.
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | *required* | Audio source URL |
 | `title` | `string` | - | Track title |
 | `artist` | `string` | - | Artist name |
 | `cover` | `string` | - | Cover image URL |
-| `autoplay` | `boolean` | `false` | Auto play on load |
-| `loop` | `boolean` | `false` | Loop playback |
-| `primaryColor` | `string` | `'#6366f1'` | Primary theme color |
+| `primaryColor` | `string` | `'#6366f1'` | Theme primary color |
 | `darkMode` | `boolean` | `false` | Enable dark mode |
-| `preload` | `'auto' \| 'metadata' \| 'none'` | `'metadata'` | Preload behavior |
-
-## 📡 Events
-
-Both players emit the following events:
-
-| Event | Payload | Description |
-|-------|---------|-------------|
-| `play` | - | Playback started |
-| `pause` | - | Playback paused |
-| `ended` | - | Playback ended |
-| `timeupdate` | `{ currentTime, duration, percentage }` | Time updated |
-| `volumechange` | `{ volume, muted }` | Volume changed |
-| `error` | `{ code, message }` | An error occurred |
-| `loadedmetadata` | `{ duration }` | Metadata loaded |
 
 ## 🎨 Theming
 
-### Custom Primary Color
-
 ```vue
-<VideoPlayer src="video.mp4" primaryColor="#ff6b6b" />
-```
-
-### Dark Mode
-
-```vue
-<VideoPlayer src="video.mp4" :darkMode="true" />
-```
-
-### CSS Variables
-
-You can override the following CSS variables:
-
-```css
-:root {
-  --vm-primary: #6366f1;
-  --vm-border-radius: 12px;
-  --vm-transition: 0.25s ease;
-}
-```
-
-## 🔧 Exposed Methods
-
-Access player methods via template refs:
-
-```vue
-<script setup>
-import { ref } from 'vue'
-
-const playerRef = ref()
-
-// Control the player
-playerRef.value?.play()
-playerRef.value?.pause()
-playerRef.value?.seek(30) // Seek to 30 seconds
-playerRef.value?.setVolume(0.5)
-playerRef.value?.setPlaybackRate(1.5)
-playerRef.value?.toggleFullscreen() // VideoPlayer only
-</script>
-
 <template>
-  <VideoPlayer ref="playerRef" src="video.mp4" />
+  <!-- Custom theme with dark mode -->
+  <VideoPlayer
+    src="video.mp4"
+    primaryColor="#8b5cf6"
+    :darkMode="true"
+  />
 </template>
 ```
 
 ## 📄 License
 
-MIT License © 2025
+MIT License © 2025 [peakchao](https://github.com/zhangzhichaolove)
