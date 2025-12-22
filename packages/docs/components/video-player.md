@@ -4,11 +4,30 @@
 
 ## 基本用法
 
-<div class="demo-container demo-container--video">
+<script setup>
+import { ref } from 'vue'
+
+const darkMode = ref(false)
+const primaryColor = ref('#6366f1')
+</script>
+
+<div class="demo-controls">
+  <label class="demo-toggle">
+    <input type="checkbox" v-model="darkMode" />
+    <span>🌙 Dark Mode</span>
+  </label>
+  <label class="demo-color">
+    <span>Primary Color:</span>
+    <input type="color" v-model="primaryColor" />
+  </label>
+</div>
+
+<div class="demo-container demo-container--video" :style="{ background: darkMode ? '#1a1a2e' : '' }">
   <VideoPlayer
     src="https://file.peakchao.com:5/%E7%82%AB%E9%85%B7%E8%A3%85%E6%9C%BA%E8%A7%86%E9%A2%91.mp4"
     poster="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1280&h=720&fit=crop"
-    primaryColor="#6366f1"
+    :primaryColor="primaryColor"
+    :darkMode="darkMode"
   />
 </div>
 
@@ -17,9 +36,17 @@
   <VideoPlayer
     src="https://example.com/video.mp4"
     poster="https://example.com/poster.jpg"
-    primaryColor="#6366f1"
+    :primaryColor="primaryColor"
+    :darkMode="darkMode"
   />
 </template>
+
+<script setup>
+import { ref } from 'vue'
+
+const darkMode = ref(false)
+const primaryColor = ref('#6366f1')
+</script>
 ```
 
 ## Props
@@ -131,3 +158,42 @@ playerRef.value?.toggleFullscreen()
   />
 </template>
 ```
+
+<style>
+.demo-controls {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.demo-toggle,
+.demo-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--vp-c-bg-soft);
+  padding: 8px 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--vp-c-divider);
+}
+
+.demo-toggle:hover,
+.demo-color:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.demo-color input[type="color"] {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+</style>
