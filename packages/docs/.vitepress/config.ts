@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Vue3 Media',
   description: '🎬 一个优雅的 Vue 3 媒体播放器组件库',
+  base: '/vue3-media/',
   
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],

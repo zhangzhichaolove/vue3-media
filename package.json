@@ -7,6 +7,7 @@
     "dev": "pnpm --filter playground dev",
     "docs": "pnpm --filter docs dev",
     "docs:build": "pnpm --filter docs build",
+    "docs:deploy": "bash scripts/deploy-docs.sh",
     "build": "pnpm --filter vue3-media build",
     "build:all": "pnpm -r build",
     "type-check": "pnpm -r type-check"
