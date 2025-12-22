@@ -1,0 +1,75 @@
+/* Custom theme styles */
+:root {
+  --vp-c-brand-1: #6366f1;
+  --vp-c-brand-2: #8b5cf6;
+  --vp-c-brand-3: #a78bfa;
+  --vp-c-brand-soft: rgba(99, 102, 241, 0.14);
+}
+
+.dark {
+  --vp-c-brand-1: #818cf8;
+  --vp-c-brand-2: #a78bfa;
+  --vp-c-brand-3: #c4b5fd;
+  --vp-c-brand-soft: rgba(129, 140, 248, 0.16);
+}
+
+/* Demo container styles */
+.demo-container {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  background: var(--vp-c-bg-soft);
+}
+
+.demo-container--video {
+  max-width: 100%;
+}
+
+.demo-container--audio {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Feature cards */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.feature-card {
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-divider);
+  text-align: center;
+}
+
+.feature-card .icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.feature-card h3 {
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+}
+
+.feature-card p {
+  font-size: 0.875rem;
+  color: var(--vp-c-text-2);
+  margin: 0;
+}
+
+/* Props table enhancements */
+.vp-doc table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+}

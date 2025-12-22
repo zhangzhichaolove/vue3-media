@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --filter playground dev",
+    "docs": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build",
     "build": "pnpm --filter vue3-media build",
     "build:all": "pnpm -r build",
     "type-check": "pnpm -r type-check"
