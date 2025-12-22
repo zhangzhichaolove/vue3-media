@@ -11,6 +11,16 @@ A beautiful, feature-rich media player component library for Vue 3. Includes cus
 
 📚 **[Documentation](https://zhangzhichaolove.github.io/vue3-media/en/)**
 
+## 📷 Preview
+
+### Video Player
+![Video Player](./screenshot/视频播放器.png)
+
+### Audio Player
+| Light Mode | Dark Mode |
+|:----------:|:---------:|
+| ![Audio Player](./screenshot/音乐播放器.png) | ![Audio Player Dark](./screenshot/音乐播放器-暗色.png) |
+
 ## ✨ Features
 
 - 🎥 **Video Player** - Full-featured video player with custom controls, Picture-in-Picture, and mini player
