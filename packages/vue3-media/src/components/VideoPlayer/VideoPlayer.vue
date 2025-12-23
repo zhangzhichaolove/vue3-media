@@ -986,6 +986,7 @@ defineExpose({
   padding: 4px;
   margin-bottom: 8px;
   min-width: 80px;
+  z-index: 10;
 }
 
 .vm-speed-option {
