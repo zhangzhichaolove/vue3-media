@@ -27,6 +27,10 @@
             poster="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1280&h=720&fit=crop"
             :primaryColor="primaryColor"
             :darkMode="darkMode"
+            :controls="true"
+            :muted="false"
+            :autoplay="true"
+            :loop="true"
             @play="logEvent('Video: play')"
             @pause="logEvent('Video: pause')"
             @ended="logEvent('Video: ended')"
@@ -55,8 +59,8 @@
         <div class="demo-player-container audio">
           <AudioPlayer
             :src="audioSrc"
-            title="Sample Music Track"
-            artist="Demo Artist"
+            title="红玫瑰"
+            artist="陈奕迅"
             cover="https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.jpg"
             :primaryColor="primaryColor"
             :darkMode="darkMode"
@@ -115,7 +119,7 @@ const primaryColor = ref('#6366f1')
 const events = ref<string[]>([])
 
 // Sample media URLs (using public domain samples)
-const videoSrc = 'https://file.peakchao.com:5/%E7%82%AB%E9%85%B7%E8%A3%85%E6%9C%BA%E8%A7%86%E9%A2%91.mp4'
+const videoSrc = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
 const audioSrc = 'https://file.peakchao.com:5/%E7%BA%A2%E7%8E%AB%E7%91%B0-%E9%99%88%E5%A5%95%E8%BF%85.mp3'
 
 // Event handlers

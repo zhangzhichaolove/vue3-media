@@ -28,6 +28,8 @@ const primaryColor = ref('#6366f1')
     poster="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1280&h=720&fit=crop"
     :primaryColor="primaryColor"
     :darkMode="darkMode"
+    :globalKeyboardShortcuts="true"
+    :miniPlayer="true"
   />
 </div>
 
@@ -38,6 +40,8 @@ const primaryColor = ref('#6366f1')
     poster="https://example.com/poster.jpg"
     :primaryColor="primaryColor"
     :darkMode="darkMode"
+    :globalKeyboardShortcuts="true"
+    :miniPlayer="true"
   />
 </template>
 
@@ -74,6 +78,7 @@ const primaryColor = ref('#6366f1')
 | `touchGestures` | `boolean` | `true` | Touch gesture controls |
 | `miniPlayer` | `boolean` | `false` | Mini player mode |
 | `miniPlayerPosition` | `string` | `'bottom-right'` | Mini player position |
+| `backgroundColor` | `string` | `'transparent'` | Player background color |
 
 ## Events
 

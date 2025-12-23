@@ -110,6 +110,7 @@ app.mount('#app')
 | `keyboardShortcuts` | `boolean` | `true` | 启用键盘快捷键 |
 | `showPiP` | `boolean` | `true` | 显示画中画按钮 |
 | `miniPlayer` | `boolean` | `false` | 启用迷你播放器 |
+| `backgroundColor` | `string` | `'transparent'` | 播放器背景色 |
 
 ### 键盘快捷键
 

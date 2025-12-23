@@ -110,6 +110,7 @@ A modern video player with all the controls you need.
 | `keyboardShortcuts` | `boolean` | `true` | Enable keyboard shortcuts |
 | `showPiP` | `boolean` | `true` | Show Picture-in-Picture button |
 | `miniPlayer` | `boolean` | `false` | Enable mini player mode |
+| `backgroundColor` | `string` | `'transparent'` | Player background color |
 
 ### Keyboard Shortcuts
 

@@ -109,6 +109,7 @@ A modern video player with all the controls you need.
 | `touchGestures` | `boolean` | `true` | Enable touch gestures (swipe to seek/volume) |
 | `miniPlayer` | `boolean` | `false` | Enable mini player when scrolled out of view |
 | `miniPlayerPosition` | `string` | `'bottom-right'` | Mini player position (`bottom-right`, `bottom-left`, `top-right`, `top-left`) |
+| `backgroundColor` | `string` | `'transparent'` | Player background color |
 
 ### Touch Gestures (Mobile)
 
