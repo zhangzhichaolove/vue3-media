@@ -52,6 +52,8 @@ export interface VideoPlayerProps {
   miniPlayer?: boolean
   /** Mini player position */
   miniPlayerPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left'
+  /** Player background color */
+  backgroundColor?: string
 }
 
 // Audio Player Props

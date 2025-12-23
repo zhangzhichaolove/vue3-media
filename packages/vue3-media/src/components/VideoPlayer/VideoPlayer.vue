@@ -252,6 +252,7 @@ const props = withDefaults(defineProps<VideoPlayerProps>(), {
   touchGestures: true,
   miniPlayer: false,
   miniPlayerPosition: 'bottom-right',
+  backgroundColor: 'transparent',
 })
 
 const emit = defineEmits<{
@@ -325,6 +326,7 @@ const containerStyle = computed(() => ({
   '--vm-primary': props.primaryColor,
   '--vm-primary-hover': adjustColor(props.primaryColor, -15),
   '--vm-primary-light': hexToRgba(props.primaryColor, 0.2),
+  '--vm-player-bg': props.backgroundColor,
 }))
 
 // Wrapper style to maintain layout space when in mini player mode
@@ -773,12 +775,12 @@ defineExpose({
   position: relative;
   background: rgba(0, 0, 0, 0.1);
   border-radius: var(--vm-border-radius);
+  overflow: hidden;
 }
 
 .vm-video-player {
   position: relative;
-  background: #000;
-  border-radius: var(--vm-border-radius);
+  background: var(--vm-player-bg, transparent);
   overflow: hidden;
   box-shadow: var(--vm-shadow-lg);
   outline: none;
@@ -789,6 +791,7 @@ defineExpose({
   height: 100%;
   display: block;
   object-fit: contain;
+  border-radius: inherit;
 }
 
 .vm-fullscreen {
