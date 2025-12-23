@@ -122,6 +122,24 @@ app.mount('#app')
 | `M` | 静音/取消静音 |
 | `F` | 全屏/退出全屏 |
 
+### 插槽 (Slots)
+
+| 插槽名 | 描述 |
+|--------|------|
+| `controls-left` | 在左侧控制区添加自定义按钮 |
+| `controls` | 在倍速/画中画按钮后添加自定义按钮 |
+
+```vue
+<VideoPlayer src="video.mp4">
+  <template #controls-left>
+    <button class="vm-btn">下载</button>
+  </template>
+  <template #controls>
+    <button class="vm-btn">分享</button>
+  </template>
+</VideoPlayer>
+```
+
 ## 🎵 AudioPlayer 音频播放器
 
 优雅的音频播放器，支持封面和曲目信息显示。

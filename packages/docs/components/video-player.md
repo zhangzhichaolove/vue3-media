@@ -164,6 +164,39 @@ playerRef.value?.toggleFullscreen()
 </template>
 ```
 
+### 自定义控制按钮 (Slots)
+
+VideoPlayer 提供两个插槽用于添加自定义控制按钮：
+
+| 插槽名 | 描述 |
+|--------|------|
+| `controls-left` | 在左侧控制区添加自定义按钮 |
+| `controls` | 在倍速/画中画按钮后添加自定义按钮 |
+
+```vue
+<template>
+  <VideoPlayer src="video.mp4">
+    <!-- 添加下载按钮到左侧 -->
+    <template #controls-left>
+      <button class="vm-btn" @click="handleDownload">
+        <svg class="vm-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+      </button>
+    </template>
+    
+    <!-- 添加分享按钮到右侧 -->
+    <template #controls>
+      <button class="vm-btn" @click="handleShare">
+        <svg class="vm-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+        </svg>
+      </button>
+    </template>
+  </VideoPlayer>
+</template>
+```
+
 <style>
 .demo-controls {
   display: flex;

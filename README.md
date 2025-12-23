@@ -122,6 +122,24 @@ A modern video player with all the controls you need.
 | `M` | Mute/Unmute |
 | `F` | Toggle Fullscreen |
 
+### Slots
+
+| Slot | Description |
+|------|-------------|
+| `controls-left` | Add custom buttons to the left control area |
+| `controls` | Add custom buttons after speed/PiP buttons |
+
+```vue
+<VideoPlayer src="video.mp4">
+  <template #controls-left>
+    <button class="vm-btn">Download</button>
+  </template>
+  <template #controls>
+    <button class="vm-btn">Share</button>
+  </template>
+</VideoPlayer>
+```
+
 ## 🎵 AudioPlayer
 
 An elegant audio player with cover art and track info display.

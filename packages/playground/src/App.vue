@@ -37,18 +37,36 @@
             @timeupdate="handleTimeUpdate"
             :globalKeyboardShortcuts="true"
             :miniPlayer="true"
-          />
+          >
+            <!-- Custom controls slot example -->
+            <template #controls-left>
+              <button class="vm-btn custom-btn" @click="handleDownload" title="Download">
+                <svg class="vm-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+              </button>
+            </template>
+            <template #controls>
+              <button class="vm-btn custom-btn" @click="handleShare" title="Share">
+                <svg class="vm-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+                </svg>
+              </button>
+            </template>
+          </VideoPlayer>
         </div>
         
         <div class="demo-props">
-          <h3>Props Used:</h3>
+          <h3>Slot Example:</h3>
           <code>
-            &lt;VideoPlayer
-              src="..."
-              poster="..."
-              :primaryColor="{{ primaryColor }}"
-              :darkMode="{{ darkMode }}"
-            /&gt;
+&lt;VideoPlayer src="..."&gt;
+  &lt;template #controls-left&gt;
+    &lt;button class="vm-btn"&gt;Download&lt;/button&gt;
+  &lt;/template&gt;
+  &lt;template #controls&gt;
+    &lt;button class="vm-btn"&gt;Share&lt;/button&gt;
+  &lt;/template&gt;
+&lt;/VideoPlayer&gt;
           </code>
         </div>
       </section>
@@ -136,6 +154,16 @@ function handleTimeUpdate(payload: TimeUpdatePayload) {
   if (Math.floor(payload.currentTime) % 5 === 0 && payload.currentTime > 0) {
     // logEvent(`Video timeupdate: ${payload.currentTime.toFixed(1)}s / ${payload.duration.toFixed(1)}s`)
   }
+}
+
+function handleDownload() {
+  logEvent('Custom button: Download clicked')
+  // In real app, implement download logic
+}
+
+function handleShare() {
+  logEvent('Custom button: Share clicked')
+  // In real app, implement share logic
 }
 </script>
 
