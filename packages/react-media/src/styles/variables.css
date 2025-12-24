@@ -1,0 +1,58 @@
+/* React Media - CSS Variables */
+
+:root {
+  /* Primary Colors */
+  --vm-primary: #6366f1;
+  --vm-primary-hover: #4f46e5;
+  --vm-primary-light: rgba(99, 102, 241, 0.2);
+  
+  /* Light Mode Colors */
+  --vm-bg: #ffffff;
+  --vm-bg-secondary: #f3f4f6;
+  --vm-bg-tertiary: #e5e7eb;
+  --vm-text: #1f2937;
+  --vm-text-secondary: #6b7280;
+  --vm-text-muted: #9ca3af;
+  --vm-border: #e5e7eb;
+  
+  /* Control Colors */
+  --vm-control-bg: rgba(0, 0, 0, 0.7);
+  --vm-control-text: #ffffff;
+  --vm-control-hover: rgba(255, 255, 255, 0.1);
+  
+  /* Progress Bar */
+  --vm-progress-bg: rgba(255, 255, 255, 0.3);
+  --vm-progress-buffered: rgba(255, 255, 255, 0.5);
+  --vm-progress-played: var(--vm-primary);
+  
+  /* Sizing */
+  --vm-control-height: 48px;
+  --vm-icon-size: 24px;
+  --vm-icon-size-lg: 32px;
+  --vm-border-radius: 12px;
+  --vm-border-radius-sm: 8px;
+  
+  /* Animation */
+  --vm-transition-fast: 0.15s ease;
+  --vm-transition: 0.25s ease;
+  --vm-transition-slow: 0.35s ease;
+  
+  /* Shadows */
+  --vm-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --vm-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Variables */
+.vm-dark {
+  --vm-bg: #111827;
+  --vm-bg-secondary: #1f2937;
+  --vm-bg-tertiary: #374151;
+  --vm-text: #f9fafb;
+  --vm-text-secondary: #d1d5db;
+  --vm-text-muted: #9ca3af;
+  --vm-border: #374151;
+  
+  --vm-control-bg: rgba(0, 0, 0, 0.85);
+  --vm-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --vm-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+}
